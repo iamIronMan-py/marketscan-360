@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.venv/
+venv/
+__pycache__/
+*.pyc
+.env
+backend/storage/reports/
+backend/storage/exports/
+frontend/.vite/

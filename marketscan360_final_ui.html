@@ -1,0 +1,464 @@
+
+<style>
+:root{
+  --ms-bg:#0D0F14;--ms-surface:#13161E;--ms-card:#1A1E28;--ms-border:#252A37;
+  --ms-accent:#7C6FF7;--ms-accent2:#1DD9A0;--ms-accent3:#F5A623;
+  --ms-text:#F0F2F8;--ms-muted:#7A8099;--ms-dim:#3D4358;
+  --ms-neg:#F0614A;--ms-pos:#1DD9A0;--ms-warn:#F5A623;
+  --ms-tw:#1DA1F2;--ms-li:#0A66C2;--ms-rd:#FF4500;--ms-yt:#FF0000;
+  --ms-g2:#FF492C;--ms-cap:#4CAF50;--ms-tr:#00B5AD;--ms-ig:#C13584;
+}
+.light{
+  --ms-bg:#F0F2F8;--ms-surface:#FFFFFF;--ms-card:#F7F8FC;--ms-border:#DDE1EE;
+  --ms-accent:#534AB7;--ms-accent2:#0F8A63;--ms-accent3:#B87A10;
+  --ms-text:#0D0F14;--ms-muted:#5A6180;--ms-dim:#C5CAD8;
+  --ms-neg:#C0392B;--ms-pos:#0A6644;--ms-warn:#7A5200;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,sans-serif}
+.app{display:grid;grid-template-columns:56px 200px 1fr;height:700px;background:var(--ms-bg);color:var(--ms-text);overflow:hidden;border-radius:12px;border:1px solid var(--ms-border)}
+.iconbar{background:var(--ms-surface);border-right:1px solid var(--ms-border);display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:4px}
+.ib-logo{width:32px;height:32px;background:var(--ms-accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;margin-bottom:12px;letter-spacing:-0.5px}
+.ib-btn{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;background:transparent;color:var(--ms-muted);font-size:16px;position:relative}
+.ib-btn.active{background:var(--ms-accent);color:#fff}
+.ib-btn:hover:not(.active){background:var(--ms-card);color:var(--ms-text)}
+.ib-sep{width:28px;height:1px;background:var(--ms-border);margin:8px 0}
+.ib-bottom{margin-top:auto;display:flex;flex-direction:column;align-items:center;gap:4px}
+.theme-btn{width:36px;height:36px;border-radius:8px;background:var(--ms-card);border:1px solid var(--ms-border);color:var(--ms-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px}
+.sidebar{background:var(--ms-surface);border-right:1px solid var(--ms-border);display:flex;flex-direction:column;overflow:hidden}
+.sb-head{padding:16px 16px 12px;border-bottom:1px solid var(--ms-border)}
+.sb-title{font-size:13px;font-weight:600;color:var(--ms-text);letter-spacing:0.2px}
+.sb-sub{font-size:10px;color:var(--ms-muted);margin-top:2px}
+.sb-search{margin:10px 12px;padding:7px 10px;background:var(--ms-card);border:1px solid var(--ms-border);border-radius:7px;font-size:11px;color:var(--ms-text);outline:none;width:calc(100% - 24px)}
+.sb-search::placeholder{color:var(--ms-muted)}
+.sb-section{font-size:9px;font-weight:600;color:var(--ms-dim);letter-spacing:1px;text-transform:uppercase;padding:10px 14px 4px}
+.sb-item{display:flex;align-items:center;gap:8px;padding:7px 14px;cursor:pointer;border-left:2px solid transparent;font-size:12px;color:var(--ms-muted)}
+.sb-item.active{color:var(--ms-accent);background:rgba(124,111,247,0.08);border-left:2px solid var(--ms-accent);font-weight:500}
+.sb-item:hover:not(.active){background:var(--ms-card);color:var(--ms-text)}
+.sb-item-icon{font-size:13px;width:16px;text-align:center}
+.sb-badge{margin-left:auto;font-size:9px;padding:1px 6px;border-radius:20px;font-weight:600}
+.sb-badge.green{background:rgba(29,217,160,0.15);color:var(--ms-pos)}
+.sb-badge.amber{background:rgba(245,166,35,0.15);color:var(--ms-warn)}
+.sb-badge.purple{background:rgba(124,111,247,0.15);color:var(--ms-accent)}
+.sb-company-mini{display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;border-radius:6px;margin:1px 8px}
+.sb-company-mini:hover{background:var(--ms-card)}
+.sb-company-mini.active{background:rgba(124,111,247,0.1)}
+.co-avatar{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0}
+.co-info{flex:1;min-width:0}
+.co-name{font-size:11px;font-weight:500;color:var(--ms-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.co-status{font-size:9px;color:var(--ms-muted)}
+.co-score{font-size:10px;font-weight:600}
+.main{display:flex;flex-direction:column;overflow:hidden}
+.main-topbar{display:flex;align-items:center;gap:12px;padding:12px 20px;border-bottom:1px solid var(--ms-border);background:var(--ms-surface)}
+.main-breadcrumb{font-size:12px;color:var(--ms-muted)}
+.main-breadcrumb span{color:var(--ms-text);font-weight:500}
+.topbar-right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.scan-input-wrap{display:flex;align-items:center;background:var(--ms-card);border:1px solid var(--ms-border);border-radius:8px;padding:0 10px;gap:8px}
+.scan-input-wrap input{background:transparent;border:none;font-size:12px;color:var(--ms-text);outline:none;padding:7px 0;width:200px}
+.scan-input-wrap input::placeholder{color:var(--ms-muted)}
+.scan-go{padding:5px 14px;background:var(--ms-accent);color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer}
+.status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dot-green{background:var(--ms-pos)}
+.dot-amber{background:var(--ms-warn)}
+.dot-red{background:var(--ms-neg)}
+.main-content{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px}
+.company-hero{background:var(--ms-card);border:1px solid var(--ms-border);border-radius:12px;padding:20px;display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:start}
+.co-hero-avatar{width:52px;height:52px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;flex-shrink:0}
+.co-hero-name{font-size:18px;font-weight:600;color:var(--ms-text)}
+.co-hero-meta{font-size:12px;color:var(--ms-muted);margin-top:3px}
+.co-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.co-tag{font-size:10px;padding:2px 8px;border-radius:20px;background:var(--ms-border);color:var(--ms-muted);font-weight:500}
+.co-hero-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.opp-ring{width:58px;height:58px;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;position:relative}
+.opp-ring svg{position:absolute;top:0;left:0}
+.opp-val{color:var(--ms-accent);position:relative;z-index:1}
+.opp-label{font-size:9px;color:var(--ms-muted);font-weight:500;letter-spacing:0.5px}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat-card{background:var(--ms-card);border:1px solid var(--ms-border);border-radius:10px;padding:14px 16px}
+.stat-num{font-size:22px;font-weight:700;color:var(--ms-text)}
+.stat-label{font-size:10px;color:var(--ms-muted);margin-top:3px;font-weight:500;letter-spacing:0.3px}
+.stat-delta{font-size:10px;margin-top:4px;font-weight:500}
+.delta-pos{color:var(--ms-pos)}
+.delta-neg{color:var(--ms-neg)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.panel{background:var(--ms-card);border:1px solid var(--ms-border);border-radius:12px;padding:16px;overflow:hidden}
+.panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.panel-title{font-size:12px;font-weight:600;color:var(--ms-text);letter-spacing:0.2px}
+.panel-badge{font-size:9px;padding:2px 7px;border-radius:20px;font-weight:600}
+.pb-live{background:rgba(29,217,160,0.15);color:var(--ms-pos)}
+.pb-ai{background:rgba(124,111,247,0.15);color:var(--ms-accent)}
+.pb-warn{background:rgba(245,166,35,0.15);color:var(--ms-warn)}
+.platform-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.plat-card{background:var(--ms-surface);border:1px solid var(--ms-border);border-radius:9px;padding:10px 12px;cursor:pointer;position:relative;overflow:hidden}
+.plat-card:hover{border-color:var(--ms-accent)}
+.plat-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.plat-name-row{display:flex;align-items:center;gap:6px}
+.plat-dot{width:8px;height:8px;border-radius:50%}
+.plat-name-text{font-size:11px;font-weight:600;color:var(--ms-text)}
+.plat-count{font-size:10px;color:var(--ms-muted)}
+.plat-sent-bar{height:3px;background:var(--ms-border);border-radius:2px;overflow:hidden}
+.plat-sent-fill{height:100%;border-radius:2px}
+.plat-stats{display:flex;justify-content:space-between;margin-top:5px}
+.plat-stat{font-size:9px;color:var(--ms-muted)}
+.plat-stat span{color:var(--ms-text);font-weight:500}
+.plat-link{font-size:9px;color:var(--ms-accent);margin-top:4px;cursor:pointer;display:block}
+.signal-feed{display:flex;flex-direction:column;gap:8px}
+.signal-item{background:var(--ms-surface);border:1px solid var(--ms-border);border-radius:9px;padding:10px 12px;display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:start}
+.sig-plat-pill{font-size:9px;padding:2px 7px;border-radius:20px;font-weight:600;color:#fff;white-space:nowrap}
+.sig-body{font-size:11px;color:var(--ms-muted);line-height:1.5;margin-top:2px}
+.sig-title{font-size:11px;font-weight:500;color:var(--ms-text)}
+.sig-meta{font-size:9px;color:var(--ms-dim);margin-top:4px}
+.sig-link{font-size:9px;color:var(--ms-accent);cursor:pointer;text-decoration:none}
+.sig-right{text-align:right}
+.sig-sent{font-size:9px;padding:2px 6px;border-radius:20px;font-weight:600}
+.sent-p{background:rgba(29,217,160,0.15);color:var(--ms-pos)}
+.sent-n{background:rgba(240,97,74,0.15);color:var(--ms-neg)}
+.sent-m{background:rgba(245,166,35,0.12);color:var(--ms-warn)}
+.sig-time{font-size:9px;color:var(--ms-dim);margin-top:3px}
+.gap-list{display:flex;flex-direction:column;gap:8px}
+.gap-item{display:flex;align-items:center;gap:10px}
+.gap-label-text{font-size:11px;color:var(--ms-muted);width:110px;flex-shrink:0}
+.gap-track{flex:1;height:5px;background:var(--ms-border);border-radius:3px;overflow:hidden}
+.gap-fill{height:100%;border-radius:3px}
+.gap-score{font-size:11px;font-weight:600;width:28px;text-align:right}
+.gap-vs{font-size:9px;color:var(--ms-dim);width:40px;text-align:right;flex-shrink:0}
+.workflow-strip{display:flex;align-items:center;gap:0;background:var(--ms-card);border:1px solid var(--ms-border);border-radius:10px;overflow:hidden}
+.wf-step{flex:1;padding:10px 12px;border-right:1px solid var(--ms-border);position:relative}
+.wf-step:last-child{border-right:none}
+.wf-step.done{background:rgba(29,217,160,0.06)}
+.wf-step.active{background:rgba(124,111,247,0.08)}
+.wf-num{font-size:9px;font-weight:700;color:var(--ms-dim);letter-spacing:0.5px;margin-bottom:3px}
+.wf-name{font-size:10px;font-weight:600;color:var(--ms-muted)}
+.wf-step.done .wf-name{color:var(--ms-pos)}
+.wf-step.active .wf-name{color:var(--ms-accent)}
+.wf-ind{width:6px;height:6px;border-radius:50%;position:absolute;top:10px;right:10px}
+.wf-done{background:var(--ms-pos)}
+.wf-active{background:var(--ms-accent)}
+.wf-idle{background:var(--ms-dim)}
+.save-bar{display:flex;align-items:center;gap:10px;background:var(--ms-card);border:1px solid var(--ms-border);border-radius:10px;padding:12px 16px}
+.save-info{flex:1;font-size:11px;color:var(--ms-muted)}
+.save-info span{color:var(--ms-text);font-weight:500}
+.save-btn{padding:7px 16px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;border:none}
+.save-pdf{background:var(--ms-accent);color:#fff}
+.save-json{background:var(--ms-card);color:var(--ms-muted);border:1px solid var(--ms-border)}
+.save-json:hover{background:var(--ms-border)}
+.hashtag-cloud{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.htag{font-size:9px;padding:2px 7px;background:rgba(124,111,247,0.1);color:var(--ms-accent);border-radius:20px;cursor:pointer;border:1px solid rgba(124,111,247,0.2)}
+.htag:hover{background:rgba(124,111,247,0.2)}
+</style>
+<h2 class="sr-only">MarketScan 360 — fully interactive dark/light UI with sidebar, workflow, platform intelligence, and signal feed</h2>
+<div class="app" id="appRoot">
+  <div class="iconbar">
+    <div class="ib-logo">M3</div>
+    <div class="ib-btn active" title="Dashboard">
+      <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><rect x="2" y="2" width="5" height="5" rx="1" fill="currentColor"/><rect x="9" y="2" width="5" height="5" rx="1" fill="currentColor"/><rect x="2" y="9" width="5" height="5" rx="1" fill="currentColor"/><rect x="9" y="9" width="5" height="5" rx="1" fill="currentColor"/></svg>
+    </div>
+    <div class="ib-btn" title="New Scan">
+      <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M8 5v6M5 8h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <div class="ib-btn" title="Social Intel">
+      <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><circle cx="5" cy="8" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="4" r="2" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M7.5 7L10 5M7.5 9L10 11" stroke="currentColor" stroke-width="1.2"/></svg>
+    </div>
+    <div class="ib-sep"></div>
+    <div class="ib-btn" title="Reports">
+      <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><rect x="3" y="2" width="10" height="12" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M6 6h4M6 9h4M6 12h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+    </div>
+    <div class="ib-btn" title="Competitors">
+      <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><path d="M2 12L6 7l3 3 5-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="ib-sep"></div>
+    <div class="ib-bottom">
+      <div class="ib-btn" title="Settings">
+        <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M8 2v1.5M8 12.5V14M2 8h1.5M12.5 8H14M3.5 3.5l1.1 1.1M11.4 11.4l1.1 1.1M3.5 12.5l1.1-1.1M11.4 4.6l1.1-1.1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </div>
+      <div class="theme-btn" id="themeToggle" title="Toggle theme">
+        <svg id="themeIcon" width="14" height="14" fill="none" viewBox="0 0 16 16"><path d="M8 2a6 6 0 100 12A6 6 0 008 2z" fill="currentColor" opacity="0.3"/><circle cx="8" cy="8" r="3" fill="currentColor"/><path d="M8 1v1M8 14v1M1 8h1M14 8h1M3.2 3.2l.7.7M12.1 12.1l.7.7M3.2 12.8l.7-.7M12.1 3.9l.7-.7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+  </div>
+  <div class="sidebar">
+    <div class="sb-head">
+      <div class="sb-title">Workspace</div>
+      <div class="sb-sub">B2B Intelligence Suite</div>
+    </div>
+    <input class="sb-search" placeholder="Search companies..." />
+    <div class="sb-section">Main</div>
+    <div class="sb-item active" onclick="switchNav(this,'dashboard')"><span class="sb-item-icon">◈</span> Dashboard <span class="sb-badge purple">3</span></div>
+    <div class="sb-item" onclick="switchNav(this,'scan')"><span class="sb-item-icon">⊕</span> New scan</div>
+    <div class="sb-item" onclick="switchNav(this,'companies')"><span class="sb-item-icon">◉</span> Companies <span class="sb-badge amber">48</span></div>
+    <div class="sb-section">Analysis</div>
+    <div class="sb-item" onclick="switchNav(this,'social')"><span class="sb-item-icon">◎</span> Social intel <span class="sb-badge green">Live</span></div>
+    <div class="sb-item" onclick="switchNav(this,'gaps')"><span class="sb-item-icon">▣</span> Product gaps</div>
+    <div class="sb-item" onclick="switchNav(this,'competitors')"><span class="sb-item-icon">⟁</span> Competitor map</div>
+    <div class="sb-item" onclick="switchNav(this,'promo')"><span class="sb-item-icon">◆</span> Promo ideas</div>
+    <div class="sb-section">Output</div>
+    <div class="sb-item" onclick="switchNav(this,'reports')"><span class="sb-item-icon">▤</span> PDF reports</div>
+    <div class="sb-item" onclick="switchNav(this,'exports')"><span class="sb-item-icon">↗</span> Exports</div>
+    <div class="sb-section">Recent scans</div>
+    <div class="sb-company-mini active" onclick="selectCompany(this,'Freshworks')">
+      <div class="co-avatar" style="background:#7C6FF7;font-size:8px;font-weight:700;color:#fff">FW</div>
+      <div class="co-info"><div class="co-name">Freshworks</div><div class="co-status">Complete</div></div>
+      <div class="co-score" style="color:#1DD9A0">88</div>
+    </div>
+    <div class="sb-company-mini" onclick="selectCompany(this,'Zoho')">
+      <div class="co-avatar" style="background:#F5A623;font-size:8px;font-weight:700;color:#fff">ZH</div>
+      <div class="co-info"><div class="co-name">Zoho Corp</div><div class="co-status">Scanning...</div></div>
+      <div class="co-score" style="color:#F5A623">—</div>
+    </div>
+    <div class="sb-company-mini" onclick="selectCompany(this,'Chargebee')">
+      <div class="co-avatar" style="background:#1DD9A0;font-size:8px;font-weight:700;color:#0D0F14">CB</div>
+      <div class="co-info"><div class="co-name">Chargebee</div><div class="co-status">Complete</div></div>
+      <div class="co-score" style="color:#1DD9A0">71</div>
+    </div>
+    <div class="sb-company-mini" onclick="selectCompany(this,'LeadSquared')">
+      <div class="co-avatar" style="background:#F0614A;font-size:8px;font-weight:700;color:#fff">LS</div>
+      <div class="co-info"><div class="co-name">LeadSquared</div><div class="co-status">Queued</div></div>
+      <div class="co-score" style="color:var(--ms-dim)">—</div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="main-topbar">
+      <div class="main-breadcrumb">MarketScan / <span id="breadcrumbText">Dashboard</span></div>
+      <div style="display:flex;align-items:center;gap:6px;margin-left:16px">
+        <div class="status-dot dot-green"></div>
+        <span style="font-size:11px;color:var(--ms-muted)">3 active scans</span>
+      </div>
+      <div class="topbar-right">
+        <div class="scan-input-wrap">
+          <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5" stroke="var(--ms-muted)" stroke-width="1.5"/><path d="M10.5 10.5L13 13" stroke="var(--ms-muted)" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <input placeholder="Enter company / domain / bulk list..." />
+          <button class="scan-go">Scan ↗</button>
+        </div>
+      </div>
+    </div>
+    <div class="main-content">
+      <div class="workflow-strip">
+        <div class="wf-step done"><div class="wf-num">01</div><div class="wf-name">Company intel</div><div class="wf-ind wf-done"></div></div>
+        <div class="wf-step done"><div class="wf-num">02</div><div class="wf-name">Web + social crawl</div><div class="wf-ind wf-done"></div></div>
+        <div class="wf-step done"><div class="wf-num">03</div><div class="wf-name">Review aggregation</div><div class="wf-ind wf-done"></div></div>
+        <div class="wf-step active"><div class="wf-num">04</div><div class="wf-name">Gap analysis</div><div class="wf-ind wf-active"></div></div>
+        <div class="wf-step"><div class="wf-num">05</div><div class="wf-name">Competitor bench</div><div class="wf-ind wf-idle"></div></div>
+        <div class="wf-step"><div class="wf-num">06</div><div class="wf-name">Promo generation</div><div class="wf-ind wf-idle"></div></div>
+        <div class="wf-step"><div class="wf-num">07</div><div class="wf-name">PDF report</div><div class="wf-ind wf-idle"></div></div>
+      </div>
+      <div class="company-hero">
+        <div class="co-hero-avatar" style="background:#7C6FF7">FW</div>
+        <div>
+          <div class="co-hero-name">Freshworks Inc.</div>
+          <div class="co-hero-meta">freshworks.com · SaaS / CRM · Chennai, India · Founded 2010</div>
+          <div class="co-tags">
+            <span class="co-tag">CRM</span><span class="co-tag">Customer Support</span><span class="co-tag">SMB</span><span class="co-tag">AI</span><span class="co-tag">NASDAQ: FRSH</span>
+          </div>
+        </div>
+        <div class="co-hero-right">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+            <div class="opp-ring">
+              <svg width="58" height="58" viewBox="0 0 58 58"><circle cx="29" cy="29" r="25" stroke="var(--ms-border)" stroke-width="3" fill="none"/><circle cx="29" cy="29" r="25" stroke="#7C6FF7" stroke-width="3" fill="none" stroke-dasharray="140 157" stroke-dashoffset="39" stroke-linecap="round" transform="rotate(-90 29 29)"/></svg>
+              <span class="opp-val">88</span>
+            </div>
+            <div class="opp-label">OPP SCORE</div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button class="save-json" style="font-size:10px;padding:5px 10px">Re-scan</button>
+            <button class="save-pdf" style="font-size:10px;padding:5px 10px">Export PDF</button>
+          </div>
+        </div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-num">1,847</div><div class="stat-label">Total signals collected</div><div class="stat-delta delta-pos">+214 this week</div></div>
+        <div class="stat-card"><div class="stat-num">61%</div><div class="stat-label">Positive sentiment avg</div><div class="stat-delta delta-neg">-4% vs last scan</div></div>
+        <div class="stat-card"><div class="stat-num">9</div><div class="stat-label">Platforms covered</div><div class="stat-delta" style="color:var(--ms-muted)">All sources live</div></div>
+        <div class="stat-card"><div class="stat-num">6</div><div class="stat-label">Product gaps identified</div><div class="stat-delta delta-pos">High priority</div></div>
+      </div>
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">Platform intelligence</div>
+            <div class="panel-badge pb-live">Live feed</div>
+          </div>
+          <div class="platform-grid">
+            <div class="plat-card">
+              <div class="plat-card-top">
+                <div class="plat-name-row"><div class="plat-dot" style="background:#1DA1F2"></div><span class="plat-name-text">Twitter / X</span></div>
+                <span class="plat-count">47 posts</span>
+              </div>
+              <div class="plat-sent-bar"><div class="plat-sent-fill" style="width:52%;background:#F5A623"></div></div>
+              <div class="plat-stats">
+                <span class="plat-stat">Reach <span>2.3K</span></span>
+                <span class="plat-stat">Hashtags <span>12</span></span>
+              </div>
+              <a class="plat-link" href="https://twitter.com/search?q=Freshworks">View on platform ↗</a>
+            </div>
+            <div class="plat-card">
+              <div class="plat-card-top">
+                <div class="plat-name-row"><div class="plat-dot" style="background:#0A66C2"></div><span class="plat-name-text">LinkedIn</span></div>
+                <span class="plat-count">12 posts</span>
+              </div>
+              <div class="plat-sent-bar"><div class="plat-sent-fill" style="width:78%;background:#1DD9A0"></div></div>
+              <div class="plat-stats">
+                <span class="plat-stat">Comments <span>340</span></span>
+                <span class="plat-stat">Reactions <span>1.1K</span></span>
+              </div>
+              <a class="plat-link" href="https://linkedin.com/company/freshworks">View on platform ↗</a>
+            </div>
+            <div class="plat-card">
+              <div class="plat-card-top">
+                <div class="plat-name-row"><div class="plat-dot" style="background:#FF4500"></div><span class="plat-name-text">Reddit</span></div>
+                <span class="plat-count">89 threads</span>
+              </div>
+              <div class="plat-sent-bar"><div class="plat-sent-fill" style="width:31%;background:#F0614A"></div></div>
+              <div class="plat-stats">
+                <span class="plat-stat">Upvotes <span>4.2K</span></span>
+                <span class="plat-stat">Comments <span>612</span></span>
+              </div>
+              <a class="plat-link" href="https://reddit.com/search?q=Freshworks">View on platform ↗</a>
+            </div>
+            <div class="plat-card">
+              <div class="plat-card-top">
+                <div class="plat-name-row"><div class="plat-dot" style="background:#FF492C"></div><span class="plat-name-text">G2 Reviews</span></div>
+                <span class="plat-count">228 reviews</span>
+              </div>
+              <div class="plat-sent-bar"><div class="plat-sent-fill" style="width:61%;background:#1DD9A0"></div></div>
+              <div class="plat-stats">
+                <span class="plat-stat">Avg ★ <span>3.9</span></span>
+                <span class="plat-stat">NPS <span>+22</span></span>
+              </div>
+              <a class="plat-link" href="https://g2.com/products/freshworks">View on platform ↗</a>
+            </div>
+            <div class="plat-card">
+              <div class="plat-card-top">
+                <div class="plat-name-row"><div class="plat-dot" style="background:#4CAF50"></div><span class="plat-name-text">Capterra</span></div>
+                <span class="plat-count">311 reviews</span>
+              </div>
+              <div class="plat-sent-bar"><div class="plat-sent-fill" style="width:67%;background:#1DD9A0"></div></div>
+              <div class="plat-stats">
+                <span class="plat-stat">Avg ★ <span>4.1</span></span>
+                <span class="plat-stat">Recommend <span>82%</span></span>
+              </div>
+              <a class="plat-link" href="https://capterra.com/p/freshworks">View on platform ↗</a>
+            </div>
+            <div class="plat-card">
+              <div class="plat-card-top">
+                <div class="plat-name-row"><div class="plat-dot" style="background:#00B5AD"></div><span class="plat-name-text">Trustradius</span></div>
+                <span class="plat-count">94 reviews</span>
+              </div>
+              <div class="plat-sent-bar"><div class="plat-sent-fill" style="width:58%;background:#F5A623"></div></div>
+              <div class="plat-stats">
+                <span class="plat-stat">Score <span>7.4/10</span></span>
+                <span class="plat-stat">Verified <span>81%</span></span>
+              </div>
+              <a class="plat-link" href="https://trustradius.com/freshworks">View on platform ↗</a>
+            </div>
+          </div>
+          <div class="hashtag-cloud">
+            <span class="htag">#FreshworksCRM</span><span class="htag">#Freshdesk</span><span class="htag">#CRMsoftware</span><span class="htag">#CustomerSuccess</span><span class="htag">#SaaS</span><span class="htag">#HelpDesk</span><span class="htag">#FreshworksAI</span>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">Live signal feed</div>
+            <div class="panel-badge pb-live">Real-time</div>
+          </div>
+          <div class="signal-feed">
+            <div class="signal-item">
+              <div><span class="sig-plat-pill" style="background:#1DA1F2">TW</span></div>
+              <div>
+                <div class="sig-title">Users flagging onboarding complexity</div>
+                <div class="sig-body">Multiple posts in #FreshworksCRM thread citing 6-step setup vs competitors' 2-step. Gaining traction.</div>
+                <div class="sig-meta">47 engagements · @user123 · <a class="sig-link" href="https://twitter.com">View thread ↗</a></div>
+              </div>
+              <div class="sig-right"><span class="sig-sent sent-n">Negative</span><div class="sig-time">2h ago</div></div>
+            </div>
+            <div class="signal-item">
+              <div><span class="sig-plat-pill" style="background:#FF4500">RD</span></div>
+              <div>
+                <div class="sig-title">r/crmsoftware — mobile app complaints</div>
+                <div class="sig-body">Thread: "Is Freshworks mobile app dead?" — 38 upvotes, 14 comments comparing to HubSpot mobile.</div>
+                <div class="sig-meta">r/crmsoftware · 612 upvotes total · <a class="sig-link" href="https://reddit.com">View thread ↗</a></div>
+              </div>
+              <div class="sig-right"><span class="sig-sent sent-n">Critical</span><div class="sig-time">5h ago</div></div>
+            </div>
+            <div class="signal-item">
+              <div><span class="sig-plat-pill" style="background:#0A66C2">LI</span></div>
+              <div>
+                <div class="sig-title">Hiring ML engineers — AI expansion signal</div>
+                <div class="sig-body">Company post on 3 open ML/AI roles. Comments asking "when will AI match Salesforce Einstein?"</div>
+                <div class="sig-meta">Freshworks page · 1.1K reactions · <a class="sig-link" href="https://linkedin.com">View post ↗</a></div>
+              </div>
+              <div class="sig-right"><span class="sig-sent sent-p">Opportunity</span><div class="sig-time">1d ago</div></div>
+            </div>
+            <div class="signal-item">
+              <div><span class="sig-plat-pill" style="background:#FF492C">G2</span></div>
+              <div>
+                <div class="sig-title">Recurring pain: "Limited custom reports"</div>
+                <div class="sig-body">3rd most tagged complaint in last 90d reviews. Users switching to Zoho for analytics depth.</div>
+                <div class="sig-meta">G2 · 228 reviews · Avg 3.9★ · <a class="sig-link" href="https://g2.com">View reviews ↗</a></div>
+              </div>
+              <div class="sig-right"><span class="sig-sent sent-m">Mixed</span><div class="sig-time">3d ago</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">Product gap radar</div>
+            <div class="panel-badge pb-ai">AI analysis</div>
+          </div>
+          <div class="gap-list">
+            <div class="gap-item"><span class="gap-label-text">Mobile UX</span><div class="gap-track"><div class="gap-fill" style="width:38%;background:#F0614A"></div></div><span class="gap-score" style="color:#F0614A">38</span><span class="gap-vs">vs 72 HubSpot</span></div>
+            <div class="gap-item"><span class="gap-label-text">AI features</span><div class="gap-track"><div class="gap-fill" style="width:44%;background:#F5A623"></div></div><span class="gap-score" style="color:#F5A623">44</span><span class="gap-vs">vs 81 Salesforce</span></div>
+            <div class="gap-item"><span class="gap-label-text">Custom reports</span><div class="gap-track"><div class="gap-fill" style="width:35%;background:#F0614A"></div></div><span class="gap-score" style="color:#F0614A">35</span><span class="gap-vs">vs 79 Zoho</span></div>
+            <div class="gap-item"><span class="gap-label-text">API coverage</span><div class="gap-track"><div class="gap-fill" style="width:52%;background:#F5A623"></div></div><span class="gap-score" style="color:#F5A623">52</span><span class="gap-vs">vs 88 Salesforce</span></div>
+            <div class="gap-item"><span class="gap-label-text">Onboarding flow</span><div class="gap-track"><div class="gap-fill" style="width:61%;background:#F5A623"></div></div><span class="gap-score" style="color:#F5A623">61</span><span class="gap-vs">vs 84 HubSpot</span></div>
+            <div class="gap-item"><span class="gap-label-text">Pricing clarity</span><div class="gap-track"><div class="gap-fill" style="width:78%;background:#1DD9A0"></div></div><span class="gap-score" style="color:#1DD9A0">78</span><span class="gap-vs">vs 71 avg</span></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">AI pitch angles</div>
+            <div class="panel-badge pb-warn">3 high priority</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="border-left:2px solid #F0614A;padding:8px 12px;background:rgba(240,97,74,0.05);border-radius:0 8px 8px 0">
+              <div style="font-size:11px;font-weight:600;color:var(--ms-text)">Mobile-first redesign</div>
+              <div style="font-size:10px;color:var(--ms-muted);margin-top:3px;line-height:1.5">38/100 mobile score vs 72 HubSpot. Reddit thread confirms pain. ROI case is easy to build.</div>
+            </div>
+            <div style="border-left:2px solid #7C6FF7;padding:8px 12px;background:rgba(124,111,247,0.05);border-radius:0 8px 8px 0">
+              <div style="font-size:11px;font-weight:600;color:var(--ms-text)">AI feature content strategy</div>
+              <div style="font-size:10px;color:var(--ms-muted);margin-top:3px;line-height:1.5">AI buried in release notes. Competitors lead with AI on homepage. Pitch content repositioning.</div>
+            </div>
+            <div style="border-left:2px solid #F5A623;padding:8px 12px;background:rgba(245,166,35,0.05);border-radius:0 8px 8px 0">
+              <div style="font-size:11px;font-weight:600;color:var(--ms-text)">Analytics & reporting consultancy</div>
+              <div style="font-size:10px;color:var(--ms-muted);margin-top:3px;line-height:1.5">Custom reports gap costing Freshworks deals to Zoho. Your agency can offer a custom BI layer pitch.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="save-bar">
+        <svg width="14" height="14" fill="none" viewBox="0 0 16 16"><rect x="3" y="2" width="10" height="12" rx="1.5" stroke="var(--ms-muted)" stroke-width="1.5"/><path d="M6 6h4M6 9h4M6 12h2" stroke="var(--ms-muted)" stroke-width="1.2" stroke-linecap="round"/></svg>
+        <div class="save-info">Report ready — <span>Freshworks_MarketScan_Apr2026.pdf</span> · 2.4MB · Saved locally</div>
+        <button class="save-json">Save JSON</button>
+        <button class="save-json">Save CSV</button>
+        <button class="save-pdf">Download PDF</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+var isLight=false;
+function switchNav(el,page){
+  document.querySelectorAll('.sb-item').forEach(function(i){i.classList.remove('active')});
+  el.classList.add('active');
+  var bc={'dashboard':'Dashboard','scan':'New Scan','companies':'Companies','social':'Social Intel','gaps':'Product Gaps','competitors':'Competitor Map','promo':'Promo Ideas','reports':'PDF Reports','exports':'Exports'};
+  document.getElementById('breadcrumbText').textContent=bc[page]||page;
+}
+function selectCompany(el,name){
+  document.querySelectorAll('.sb-company-mini').forEach(function(i){i.classList.remove('active')});
+  el.classList.add('active');
+  document.querySelector('.co-hero-name').textContent=name+' Inc.';
+}
+document.getElementById('themeToggle').addEventListener('click',function(){
+  isLight=!isLight;
+  document.getElementById('appRoot').classList.toggle('light',isLight);
+});
+</script>
