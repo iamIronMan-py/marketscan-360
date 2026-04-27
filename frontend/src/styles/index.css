@@ -180,6 +180,31 @@ body {
   color: var(--text);
   box-shadow: var(--shadow);
   z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.snackbar__text {
+  flex: 1;
+  word-break: break-word;
+}
+
+.snackbar__close {
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 1.4rem;
+  line-height: 1;
+  padding: 0 0.25rem;
+  cursor: pointer;
+  opacity: 0.65;
+  transition: opacity 120ms ease;
+}
+
+.snackbar__close:hover {
+  opacity: 1;
 }
 
 .snackbar--success {
@@ -471,6 +496,30 @@ input {
 
 .workflow-step strong {
   font-size: 0.95rem;
+}
+
+.workflow-step__desc {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.35;
+  font-style: normal;
+}
+
+.workflow-step__status {
+  margin-top: auto;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-style: normal;
+  color: var(--muted);
+}
+
+.workflow-step--done .workflow-step__status {
+  color: rgb(138, 241, 209);
+}
+
+.workflow-step--active .workflow-step__status {
+  color: rgb(241, 156, 121);
 }
 
 .workflow-step--done {

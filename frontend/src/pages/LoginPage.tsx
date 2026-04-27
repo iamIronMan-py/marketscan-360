@@ -1,6 +1,8 @@
 import { FormEvent, useState } from "react";
 
+import { Snackbar } from "../components/Snackbar";
 import { useAuthStore } from "../hooks/useAuthStore";
+import { useSnackbarStore } from "../hooks/useSnackbarStore";
 
 const API_BASE = import.meta.env.VITE_API_BASE ?? "http://localhost:8000/api";
 
@@ -32,12 +34,12 @@ export function LoginPage({ onLoggedIn }: LoginPageProps) {
   const [setupToken, setSetupToken] = useState("");
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [modalTitle, setModalTitle] = useState("Create your password");
-  const [snackbar, setSnackbar] = useState<{ text: string; tone: "success" | "error" | "info" } | null>(null);
   const setSession = useAuthStore((state) => state.setSession);
+  const showSnackbar = useSnackbarStore((state) => state.show);
 
   function showSnack(text: string, tone: "success" | "error" | "info") {
-    setSnackbar({ text, tone });
-    window.setTimeout(() => setSnackbar(null), 3200);
+    const sticky = tone === "error" || /Debug OTP:/i.test(text);
+    showSnackbar(text, tone, { sticky });
   }
 
   async function handlePasswordLogin(event: FormEvent) {
@@ -181,7 +183,7 @@ export function LoginPage({ onLoggedIn }: LoginPageProps) {
         </div>
       ) : null}
 
-      {snackbar ? <div className={`snackbar snackbar--${snackbar.tone}`}>{snackbar.text}</div> : null}
+      <Snackbar />
     </div>
   );
 }
