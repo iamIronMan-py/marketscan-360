@@ -14,7 +14,7 @@ export function CompaniesPage() {
     <div className="page-stack">
       <section className="hero-card secondary">
         <div>
-          <p className="eyebrow">Company intel</p>
+          <p className="eyebrow">About this company</p>
           <h3>{workspace.company.name}</h3>
           <p className="hero-copy">{workspace.company.summary}</p>
         </div>
@@ -65,8 +65,8 @@ export function SocialIntelPage() {
       </section>
       <section className="panel">
         <div className="panel__header">
-          <h3>Public profile snapshots</h3>
-          <span>Best-effort fetch of discoverable profile pages with sentiment scoring</span>
+          <h3>Profile previews</h3>
+          <span>What we read off public profile pages, with a quick sentiment read</span>
         </div>
         <div className="action-list">
           {(workspace.researchDetails.profileSnapshots ?? []).map((snapshot) => (
@@ -83,8 +83,8 @@ export function SocialIntelPage() {
       </section>
       <section className="panel">
         <div className="panel__header">
-          <h3>Signals and source trace</h3>
-          <span>{workspace.researchDetails.analysisMode ?? "Grounded in crawl output and queued external sources"}</span>
+          <h3>Mentions with origin links</h3>
+          <span>{workspace.researchDetails.analysisMode ?? "From the live crawl and queued external sources"}</span>
         </div>
         <div className="action-list">
           {workspace.signals.map((signal) => (
@@ -101,8 +101,8 @@ export function SocialIntelPage() {
       </section>
       <section className="panel">
         <div className="panel__header">
-          <h3>Current limitations</h3>
-          <span>Explicitly shown instead of faking source data</span>
+          <h3>What we couldn't get</h3>
+          <span>Things the crawler couldn't reach — listed instead of made up</span>
         </div>
         <div className="action-list">
           {(workspace.researchDetails.limitations ?? []).map((item) => (
@@ -124,8 +124,8 @@ export function GapsPage() {
     <div className="page-stack">
       <section className="panel">
         <div className="panel__header">
-          <h3>Gap analysis</h3>
-          <span>Derived from website crawl heuristics</span>
+          <h3>Where this company is weak</h3>
+          <span>Inferred from the site crawl (0–100, lower means a bigger gap)</span>
         </div>
         <div className="gap-list">
           {workspace.gaps.map((gap) => (
@@ -194,8 +194,8 @@ export function SourcesPage() {
       <section className="hero-card secondary">
         <div>
           <p className="eyebrow">Source vault</p>
-          <h3>All crawled links from the company website</h3>
-          <p className="hero-copy">This view is restricted to pages and official profiles discovered from the target company website itself.</p>
+          <h3>Every link the crawler found on the company site</h3>
+          <p className="hero-copy">Limited to pages and official profiles linked from the company's own website — nothing third-party.</p>
         </div>
       </section>
       <section className="detail-grid">

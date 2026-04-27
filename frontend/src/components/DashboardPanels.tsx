@@ -6,15 +6,43 @@ function scoreClass(tone: string) {
   return "is-warning";
 }
 
+const STEP_DESCRIPTIONS: Record<string, string> = {
+  "company-intel": "Pulls firmographics, products, and positioning from the company site.",
+  "web-social-crawl": "Crawls the public site and linked social profiles for raw signal.",
+  "website-crawl": "Crawls the public site and linked social profiles for raw signal.",
+  "review-aggregation": "Queues third-party reviews, comments, and forum mentions for ingestion.",
+  "external-source-queue": "Queues third-party reviews, comments, and forum mentions for ingestion.",
+  "gap-analysis": "Compares discovered features and copy to flag missing capabilities.",
+  "competitor-bench": "Benchmarks the company against named competitors on score and posture.",
+  "promo-generation": "Drafts angle/promo copy from the strongest signals found.",
+  "pdf-report": "Compiles the full background R&D into an exportable PDF.",
+};
+
+const STATUS_COPY: Record<string, string> = {
+  done: "Complete",
+  active: "In progress",
+  idle: "Queued",
+};
+
 export function WorkflowStrip({ workflow }: { workflow: WorkspacePayload["workflow"] }) {
   return (
-    <section className="workflow-strip">
-      {workflow.map((step, index) => (
-        <article key={step.id} className={`workflow-step workflow-step--${step.status}`}>
-          <span>{String(index + 1).padStart(2, "0")}</span>
-          <strong>{step.label}</strong>
-        </article>
-      ))}
+    <section className="workflow-strip" aria-label="Background R&D pipeline">
+      {workflow.map((step, index) => {
+        const description = STEP_DESCRIPTIONS[step.id] ?? "";
+        const statusLabel = STATUS_COPY[step.status] ?? step.status;
+        return (
+          <article
+            key={step.id}
+            className={`workflow-step workflow-step--${step.status}`}
+            title={description ? `${step.label} — ${statusLabel}. ${description}` : `${step.label} — ${statusLabel}`}
+          >
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            <strong>{step.label}</strong>
+            {description ? <small className="workflow-step__desc">{description}</small> : null}
+            <em className="workflow-step__status">{statusLabel}</em>
+          </article>
+        );
+      })}
     </section>
   );
 }
@@ -23,7 +51,7 @@ export function HeroCard({ workspace }: { workspace: WorkspacePayload }) {
   return (
     <section className="hero-card aurora-frame">
       <div>
-        <p className="eyebrow">Signal command profile</p>
+        <p className="eyebrow">About this company</p>
         <h3>{workspace.company.name}</h3>
         <p className="hero-copy">{workspace.company.summary}</p>
         <div className="tag-row">
@@ -36,12 +64,12 @@ export function HeroCard({ workspace }: { workspace: WorkspacePayload }) {
       </div>
 
       <div className="score-orbit">
-        <div>
-          <small>Opportunity score</small>
+        <div title="How worth pursuing this lead looks (0–100, higher is better).">
+          <small>Opportunity (0–100)</small>
           <strong>{workspace.company.opportunityScore}</strong>
         </div>
-        <div>
-          <small>Health score</small>
+        <div title="Overall signal health: site, sources, and sentiment combined (0–100, higher is better).">
+          <small>Health (0–100)</small>
           <strong>{workspace.company.healthScore}</strong>
         </div>
       </div>
@@ -67,15 +95,15 @@ export function PlatformGrid({ workspace }: { workspace: WorkspacePayload }) {
   return (
     <section className="panel">
       <div className="panel__header">
-        <h3>Source links discovered</h3>
-        <span>Crawled pages and official profiles found on the website</span>
+        <h3>Sources we found</h3>
+        <span>Public pages and social profiles linked from the company site</span>
       </div>
       <div className="platform-grid">
         {workspace.platformLinks.map((item) => (
           <a href={item.url} key={item.platform} className="platform-card" target="_blank" rel="noreferrer">
             <div>
               <strong>{item.label}</strong>
-              <span>{item.signalCount} extracted headings</span>
+              <span>{item.signalCount} headings extracted</span>
             </div>
             <p>{item.note}</p>
             <em>{item.sourceKind}</em>
@@ -90,8 +118,8 @@ export function SignalFeed({ workspace }: { workspace: WorkspacePayload }) {
   return (
     <section className="panel">
       <div className="panel__header">
-        <h3>Comment origin trail</h3>
-        <span>Website-derived findings and discovered social handles</span>
+        <h3>Recent mentions</h3>
+        <span>Comments, reviews, and posts we picked up — each links back to its origin</span>
       </div>
       <div className="signal-feed">
         {workspace.signals.map((signal) => (
@@ -122,8 +150,8 @@ export function GapsAndIdeas({ workspace }: { workspace: WorkspacePayload }) {
     <section className="split-grid">
       <div className="panel">
         <div className="panel__header">
-          <h3>Product gap matrix</h3>
-          <span>Benchmark-aware score view</span>
+          <h3>Where this company is weak</h3>
+          <span>Areas where competitors look stronger (0–100, lower means a bigger gap)</span>
         </div>
         <div className="gap-list">
           {workspace.gaps.map((gap) => (
@@ -141,8 +169,8 @@ export function GapsAndIdeas({ workspace }: { workspace: WorkspacePayload }) {
 
       <div className="panel">
         <div className="panel__header">
-          <h3>AI pitch angles</h3>
-          <span>Pitch-ready recommendations</span>
+          <h3>Outreach angles</h3>
+          <span>Suggested pitches based on what we found, ranked by priority</span>
         </div>
         <div className="idea-list">
           {workspace.promoIdeas.map((idea) => (

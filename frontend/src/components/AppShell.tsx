@@ -5,6 +5,7 @@ import { useAuthStore } from "../hooks/useAuthStore";
 import { navGroups } from "../data/navigation";
 import { useCompaniesQuery, useWorkspaceQuery } from "../hooks/useWorkspaceQuery";
 import { useThemeStore } from "../hooks/useThemeStore";
+import { Snackbar } from "./Snackbar";
 
 interface AppShellProps {
   activeSlug: string;
@@ -98,7 +99,7 @@ export function AppShell({ activeSlug, onSelectCompany }: AppShellProps) {
       <main className="workspace">
         <header className="workspace__topbar">
           <div>
-            <p className="eyebrow">Active profile</p>
+            <p className="eyebrow">Currently viewing</p>
             <h2>{workspace?.company.name ?? "Create a new company scan"}</h2>
           </div>
           <div className="workspace__meta">
@@ -109,13 +110,14 @@ export function AppShell({ activeSlug, onSelectCompany }: AppShellProps) {
                 <span>{workspace.company.headquarters}</span>
               </>
             ) : (
-              <span>No background R&amp;D workspace selected yet.</span>
+              <span>No company selected yet — start with New scan.</span>
             )}
           </div>
         </header>
 
         <Outlet context={{ workspace, activeSlug, onSelectCompany }} />
       </main>
+      <Snackbar />
     </div>
   );
 }
