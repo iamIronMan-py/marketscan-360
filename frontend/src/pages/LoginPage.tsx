@@ -1,8 +1,7 @@
 import { FormEvent, useState } from "react";
 
+import { API_BASE, buildApiHeaders } from "../lib/api";
 import { useAuthStore } from "../hooks/useAuthStore";
-
-const API_BASE = import.meta.env.VITE_API_BASE ?? "http://localhost:8000/api";
 
 type AuthMode = "login" | "signup" | "forgot";
 
@@ -13,7 +12,7 @@ interface LoginPageProps {
 async function postJson(url: string, body: object) {
   const response = await fetch(url, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: buildApiHeaders({ "Content-Type": "application/json" }),
     body: JSON.stringify(body),
   });
   const data = await response.json();

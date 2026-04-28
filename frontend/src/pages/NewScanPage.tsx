@@ -2,9 +2,7 @@ import { FormEvent, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { getAuthToken } from "../hooks/useAuthStore";
-
-const API_BASE = import.meta.env.VITE_API_BASE ?? "http://localhost:8000/api";
+import { API_BASE, buildApiHeaders } from "../lib/api";
 
 export function NewScanPage() {
   const navigate = useNavigate();
@@ -15,13 +13,9 @@ export function NewScanPage() {
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    const token = getAuthToken();
     const response = await fetch(`${API_BASE}/scans`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
+      headers: buildApiHeaders({ "Content-Type": "application/json" }),
       body: JSON.stringify({ query }),
     });
     const data = await response.json();

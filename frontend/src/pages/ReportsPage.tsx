@@ -1,16 +1,13 @@
 import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 
-import { getAuthToken } from "../hooks/useAuthStore";
+import { API_BASE, buildApiHeaders } from "../lib/api";
 import type { WorkspacePayload } from "../types/domain";
 
-const API_BASE = import.meta.env.VITE_API_BASE ?? "http://localhost:8000/api";
-
 async function exportFile(slug: string, kind: "json" | "csv" | "report" | "report-html") {
-  const token = getAuthToken();
   const response = await fetch(`${API_BASE}/companies/${slug}/exports/${kind}`, {
     method: "POST",
-    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    headers: buildApiHeaders(),
   });
   if (!response.ok) {
     throw new Error(`Unable to export ${kind}`);

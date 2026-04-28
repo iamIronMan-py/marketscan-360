@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -17,6 +18,11 @@ class Settings(BaseSettings):
     app_name: str = "MarketScan 360 API"
     api_prefix: str = "/api"
     frontend_origin: str = "http://localhost:5173"
+    frontend_origins_raw: str = Field(default="", alias="FRONTEND_ORIGINS")
+    frontend_origin_regex: str = Field(
+        default=r"^https://[a-z0-9-]+\.ngrok-free\.app$",
+        alias="FRONTEND_ORIGIN_REGEX",
+    )
     database_url: str = Field(
         default="postgresql+asyncpg://postgres:5688353@localhost:5432/marketscan360",
         alias="DATABASE_URL",
@@ -30,6 +36,28 @@ class Settings(BaseSettings):
     jwt_secret_key: str = Field(default="change-this-in-production", alias="JWT_SECRET_KEY")
     jwt_algorithm: str = Field(default="HS256", alias="JWT_ALGORITHM")
     jwt_expire_minutes: int = Field(default=10080, alias="JWT_EXPIRE_MINUTES")
+
+    @property
+    def cors_origins(self) -> list[str]:
+        values: list[str] = []
+        if self.frontend_origin:
+            values.append(self.frontend_origin.strip())
+        if self.frontend_origins_raw:
+            values.extend(
+                origin.strip()
+                for origin in self.frontend_origins_raw.split(",")
+                if origin.strip()
+            )
+        values.extend(["http://127.0.0.1:5173", "http://localhost:5173"])
+
+        deduped: list[str] = []
+        seen: set[str] = set()
+        for value in values:
+            if value in seen:
+                continue
+            seen.add(value)
+            deduped.append(value)
+        return deduped
 
 
 settings = Settings()
